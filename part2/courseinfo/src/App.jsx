@@ -1,7 +1,7 @@
 import Course from "./components/Course";
+import UseState from "react";
 
-const App = () => {
-  const courses = [
+ const courses = [
     {
       name: "Half Stack application development",
       id: 1,
@@ -62,6 +62,8 @@ const App = () => {
     },
   ];
 
+const App = () => {
+ 
   return <Course courses={courses} />;
 };
 
