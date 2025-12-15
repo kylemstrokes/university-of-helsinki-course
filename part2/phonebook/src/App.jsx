@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Persons from "./components/Person";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
+import numberService from "./services/numbers";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   //for adding new input
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    numberService.getAll().then((initialNumbers) => {
+      setPersons(initialNumbers);
+    });
+  }, []);
 
   const handleNameChange = (event) => {
     //sets the new name to the value of the input field
@@ -42,15 +44,41 @@ const App = () => {
     const newPerson = { name: newName, number: newNumber };
     //check for duplicate names
     if (persons.map((person) => person.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      alert(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      const personToUpdate = persons.find((p) => p.name === newName);
+      const updatedPerson = { ...personToUpdate, number: newNumber };
+      numberService
+        .update(personToUpdate.id, updatedPerson)
+        .then((returnedPerson) => {
+          setPersons(
+            persons.map((p) =>
+              p.id === personToUpdate.id ? returnedPerson : p
+            )
+          );
+          setNewName("");
+          setNewNumber("");
+        });
       return;
     }
-    //returns a new array by concatenating the new person to the persons array
-    setPersons(persons.concat(newPerson));
-    //reset the input field to blank after submission
-    setNewName("");
-    setNewNumber("");
+    numberService.create(newPerson).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewNumber("");
+      setNewName("");
+    });
   };
+
+  const handleDeletePerson = (id) => {
+    const person = persons.find((p) => p.id === id);
+    if (person) {
+      alert(`Delete ${person.name}?`);
+      numberService.deletePerson(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +92,7 @@ const App = () => {
         newNumber={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} deletePerson={handleDeletePerson} />
     </div>
   );
 };
