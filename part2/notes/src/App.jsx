@@ -17,7 +17,6 @@ const App = () => {
     });
   }, []);
 
-  console.log("render", notes.length, "notes");
 
   const addNote = (event) => {
     //prevent page reload
@@ -50,7 +49,6 @@ const App = () => {
   };
 
   const handleNoteChange = (event) => {
-    console.log(event.target.value);
     setNewNote(event.target.value);
   };
 
