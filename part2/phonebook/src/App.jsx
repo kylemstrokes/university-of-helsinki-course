@@ -3,13 +3,16 @@ import Persons from "./components/Person";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import numberService from "./services/numbers";
-
+import NotificationMessage from "./components/NotificationMessage";
+import ErrorMessage from "./components/Error";
 const App = () => {
   const [persons, setPersons] = useState([]);
   //for adding new input
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     numberService.getAll().then((initialNumbers) => {
@@ -57,16 +60,27 @@ const App = () => {
               p.id === personToUpdate.id ? returnedPerson : p
             )
           );
-          setNewName("");
-          setNewNumber("");
+        }).catch(() => {
+          setErrorMessage(
+            `Information of ${newName} has already been removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          } , 5000)
+          setPersons(persons.filter(p => p.id !== personToUpdate.id))
         });
-      return;
+    } else {
+      numberService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+      });
+          //show notification message for 3 seconds
+    setNotificationMessage(`Added ${newName}`)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 3000);
     }
-    numberService.create(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewNumber("");
-      setNewName("");
-    });
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleDeletePerson = (id) => {
@@ -82,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationMessage message={notificationMessage} />
+      <ErrorMessage message={errorMessage} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
