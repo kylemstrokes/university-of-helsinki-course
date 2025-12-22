@@ -1,12 +1,23 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
-app.use(express.json());
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
+//initialize middleware
+app.use(express.json())
+
+const logger = morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    JSON.stringify(req.body)
+  ].join(' ')
+})
+
+//use the logger
+app.use(logger)
 
 let persons = [
   {
@@ -67,7 +78,6 @@ app.delete("/api/persons/:id", (request, response) => {
 });
 
 //POST
-
 app.post("/api/persons", (request, response) => {
   const { name, number } = request.body;
   if (!name || !number) {
@@ -106,3 +116,15 @@ const generateId = () => {
   //min is 4 because there's already 4 people initially
   return String(Math.floor(Math.random() * (max - 4 + min)) + min);
 };
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
