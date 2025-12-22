@@ -7,7 +7,7 @@ app.use(cors())
 let notes = [
   {
     id: '1',
-    content: 'HTML is easy',
+    content: 'HTML is easy - part 3 backend',
     important: true,
   },
   {

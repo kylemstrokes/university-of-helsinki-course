@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server:notes": "npx json-server --port 3001 part2/notes/db.json",
+    "web:notes": "./part2/notes && ",
+    "server:notes": "cd part3/backend/ && node --watch index.js",
     "server:phonebook": "npx json-server --port 3001 part2/phonebook/db.json"
   },
   "dependencies": {
