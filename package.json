@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "web:notes": "./part2/notes && ",
+    "web:notes": "cd ./part2/notes && npm run dev",
     "server:notes": "cd part3/backend/ && node --watch index.js",
     "server:phonebook": "npx json-server --port 3001 part2/phonebook/db.json"
   },
