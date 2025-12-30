@@ -1,6 +1,6 @@
 import axios from 'axios'
 const PORT = import.meta.env.VITE_PORT || 3001
-const baseUrl = `http://localhost:${PORT}/api/notes`
+const baseUrl = `/api/notes`
 
 const getAll = () => {
   const request = axios.get(baseUrl)

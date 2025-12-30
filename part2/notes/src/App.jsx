@@ -9,7 +9,7 @@ const App = () => {
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
 
-  const [errorMessage, setErrorMessage] = useState("Something went wrong...");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     noteService.getAll().then((initialNotes) => {
