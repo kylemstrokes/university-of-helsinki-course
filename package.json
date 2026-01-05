@@ -12,7 +12,10 @@
     "web:notes:deploy": "npm run web:notes:build:ui && git add . && git commit -m uibuild-from-local && git push",
     "render:notes:deploy": "cd part3/backend/ && npm run start",
     "web:notes:local": "npm run web:notes:build:ui && npm run render:notes:deploy",
-    "server:phonebook": "npx json-server --port 3001 part2/phonebook/db.json"
+
+    "phonebook:build:ui": "cd ./part2/phonebook && rm -rf dist && npm run build && cp -r dist ../../part3/phonebook",
+    "phonebook:server:start": "cd part3/phonebook/ && npm run start",
+    "phonebook:build:start": "npm run phonebook:build:ui && npm run phonebook:server:start"
   },
   "dependencies": {
     "axios": "^1.13.2",

@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 !./part3/backend/dist
+!./part3/phonebook/dist
 dist-ssr
 *.local
 pnpm-lock.yaml
