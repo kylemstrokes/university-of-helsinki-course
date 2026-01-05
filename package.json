@@ -13,7 +13,7 @@
     "render:notes:deploy": "cd part3/backend/ && npm run start",
     "web:notes:local": "npm run web:notes:build:ui && npm run render:notes:deploy",
 
-    "phonebook:install": "cd part3/phonebook && npm install",
+    "phonebook:install": "cd ./part2/phonebook && npm i && cd part3/phonebook && npm i",
     "phonebook:build:ui": "cd ./part2/phonebook && rm -rf dist && npm run build && cp -r dist ../../part3/phonebook",
     "phonebook:server:start": "cd part3/phonebook/ && npm run start",
     "phonebook:build:start": "npm run phonebook:build:ui && npm run phonebook:server:start"
